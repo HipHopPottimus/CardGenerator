@@ -1,0 +1,12 @@
+{
+    "name": "Card generator",
+    "start_url": "/src/index.html",
+    "display": "standalone",
+    "icons": [
+      {
+        "src": "icon.png",
+        "type": "image/png",
+        "sizes": "756x756"
+      }
+    ]
+  }

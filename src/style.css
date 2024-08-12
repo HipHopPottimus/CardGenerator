@@ -1,0 +1,31 @@
+dialog{
+    position: fixed;
+    top: 5%;
+}
+table, th, td{
+    border: 1px solid black;
+    padding: 5px;
+}
+.noBorder{
+    border-color: white white white black;
+}
+table{
+    border-collapse: collapse;
+    margin: 5px 0px;
+}
+input{
+    width: fit-content;
+}
+.editableTableValue{
+    padding: 5px;
+    margin: 10px;
+}
+.block{
+    display: block;
+}
+button{
+    margin: 5px 0px;
+}
+.spaced{
+    margin: 5px;
+}
