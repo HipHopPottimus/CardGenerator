@@ -1,9 +1,7 @@
 window.addEventListener("DOMContentLoaded",async () => {
-    await fileInterface.getFileHandle();
     await refreshData();
-    localStorage.open = "true";
     reloadCardTypeSelect();
-    generateTable(document.getElementById("cardTypeSelect").value);
+    reloadTables();
 });
 
 window.addEventListener("keydown",(e) => {
@@ -11,8 +9,13 @@ window.addEventListener("keydown",(e) => {
         e.preventDefault();
         save();
     }
-    if((e.key == "o" || e.key == "n") && e.ctrlKey){
-        window.location.assign("../file/")
+    if(e.key == "o" && e.ctrlKey){
+        e.preventDefault();
+        fileInterface.openFile();
+    }
+    if(e.key == "n" && e.ctrlKey && e.altKey){
+        e.preventDefault();
+        fileInterface.createNewFile();
     }
 })
 
@@ -20,7 +23,6 @@ window.addEventListener("beforeunload",(e) => {
     if(!saved){
         e.preventDefault();
     }
-    localStorage.open = "false";
 });
 
 (new BroadcastChannel("SWComms")).addEventListener("message",(e) => {
@@ -79,6 +81,10 @@ var tempData;
 async function reloadTables(){
     document.getElementById("tableArea").innerHTML = "";
     let cardType = document.getElementById("cardTypeSelect").value;
+    if(!cardType){
+        document.getElementById("tableArea").innerHTML = "No card types found.";
+        return;
+    }
     if(cardType == "*"){
         for(let type in tempData.types){
             generateTable(type);

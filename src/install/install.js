@@ -7,8 +7,8 @@ window.addEventListener("beforeinstallprompt",(e) => {
 
 async function install(){
     if(!navigator.serviceWorker) return alert("There was an error installing: service workers are not avalible.");
-    navigator.serviceWorker.register("sw.js");
+    navigator.serviceWorker.register("../sw.js");
     await navigator.serviceWorker.ready;
     let {outcome} = await installEvent.prompt();
-    if(outcome == "accepted") window.location.assign("../open-file");
+    if(outcome == "accepted") window.location.assign("../card-editor");
 }

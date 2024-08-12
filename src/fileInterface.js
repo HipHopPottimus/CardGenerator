@@ -2,9 +2,27 @@ const storage = new IDBWebStorage("cardGeneratorStorage");
 const fileInterface = {
     async getFileHandle(){
         let fileHandle = await storage.getItem("dataFileHandle");
-        if(!fileHandle || await fileHandle.queryPermission({mode: "readwrite"}) != "granted"){
+        if(!fileHandle){
             window.location.assign("../file/");
 
+        }
+        else if(await fileHandle.queryPermission({mode: "readwrite"}) != "granted"){
+            let popup = document.createElement("dialog");
+            await (new Promise((resolve,reject) => {
+                popup.innerHTML = 
+                `
+                <p>We need permission to edit your file</p>
+                <button id="request-permission-popup-button">Give premission</button>
+                `
+                document.body.appendChild(popup);
+                document.getElementById("request-permission-popup-button").onclick = async () => {
+                    if(await fileHandle.requestPermission({mode: "readwrite"}) == "granted"){
+                        popup.close();
+                        resolve();
+                    }
+                };
+                popup.show();
+            }));
         }
         return fileHandle;
     },
@@ -19,15 +37,39 @@ const fileInterface = {
         writeable.write(JSON.stringify(newContent));
         await writeable.close();
     },
-    
+
     async openFile(){
-        fileHandle = (await window.showOpenFilePicker())[0];
+        let [fileHandle] = await window.showOpenFilePicker(
+        {
+            types: [{
+                description: "CardGenerator JSON files",
+                accept: {"application/json":[".json"]}
+            }],
+            excludeAcceptAllOption: true,
+            multiple: false
+        }
+        );
         await storage.setItem("dataFileHandle",fileHandle);
         window.location.assign("../card-editor");
     },
     
     async createNewFile(){
-        
+        let fileHandle = await window.showSaveFilePicker(
+        {
+            types: [{
+                description: "CardGenerator JSON file",
+                accept: {"application/json":[".jsoon"]}
+            }],
+            excludeAcceptAllOption: true,
+            suggestedName: "new_project"
+        }
+        );
+        await storage.setItem("dataFileHandle",fileHandle);
+        await this.write({
+            cards: [],
+            types: {}
+        });
+        window.location.assign("../card-editor");
     }
 }
 

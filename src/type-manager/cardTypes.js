@@ -1,7 +1,6 @@
 window.addEventListener("DOMContentLoaded",async () => {
     await fileInterface.getFileHandle();
     await refreshData();
-    localStorage.open = "true";
     reloadCardTypeSelect();
     generateEditingUI();
 });
@@ -17,7 +16,6 @@ window.addEventListener("beforeunload",(e) => {
     if(!saved){
         e.preventDefault();
     }
-    localStorage.open = "false";
 });
 
 var saved = true;
@@ -56,23 +54,12 @@ function reloadCardTypeSelect(){
 function generateEditingUI(){
     document.getElementById("output").innerHTML = "";
     let typeName = document.getElementById("cardTypeSelect").value;
+    if(!typeName){
+        document.getElementById("output").innerHTML = `<p>No card types found.</p><button onclick="createNewType();generateEditingUI()">Create a type</button>`;
+        return;
+    }
     if(typeName == "^"){
-        modify();
-        typeName = prompt("What is the new card type called?");
-        if(typeName){
-            tempData.types[typeName] = {
-                svg: "<p>No svg supplied</p>",
-                properties: []
-            }
-            reloadCardTypeSelect();
-            document.getElementById("cardTypeSelect").value = typeName;
-        }
-        else{
-            document.getElementById("cardTypeSelect").value = false;
-            reloadCardTypeSelect();
-            generateEditingUI();
-            return;
-        }
+        typeName = createNewType();
     }
     
     let type = tempData.types[typeName];
@@ -107,6 +94,26 @@ function generateEditingUI(){
             modify();
             tempData.types[typeName].properties[Number(tv.getAttribute("data-typePropertyIndex"))][tv.getAttribute("data-representing")] = tv.innerHTML;
         }
+    }
+}
+
+function createNewType(){
+    modify();
+    typeName = prompt("What is the new card type called?");
+    if(typeName){
+        tempData.types[typeName] = {
+            frontGraphic: "<p>No svg supplied</p>",
+            backGraphic: "<p>No svg supplied</p>",
+            properties: []
+        }
+        reloadCardTypeSelect();
+        document.getElementById("cardTypeSelect").value = typeName;
+        return typeName;
+    }
+    else{
+        document.getElementById("cardTypeSelect").value = false;
+        reloadCardTypeSelect();
+        generateEditingUI();
     }
 }
 
@@ -145,8 +152,16 @@ function deleteType(typeName){
 
 async function uploadSVG(cardType,front = true){
     modify();
-    let handle = (await window.showOpenFilePicker())[0];
+    let [handle] = await window.showOpenFilePicker(
+    {
+        types: [{
+            description: "SVG files",
+            accept: {"image/svg+xml":[".svg"]}
+        }],
+        excludeAcceptAllOption: true,
+    }
+    );
     let content = await (await handle.getFile()).text();
-    tempData.types[cardType].frontGraphic = content;
+    tempData.types[cardType][front?"frontGraphic":"backGraphic"] = content;
     generateEditingUI(cardType);
 }
