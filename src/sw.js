@@ -1,22 +1,24 @@
 const VERSION = "1.0.0";
 
-const CHANGE_NOTES = "This is the first release of CardGenerator.";
+const CHANGE_NOTES = "The first release of CardGenerator.";
 
 const CACHE_NAME = "CardGeneratorCacheV:"+VERSION;
 
-//TODO- OUTDATED RESOURCES
 const APP_RESOURCES = [
-    "./fileInterface.js",
-    "./IDBWebStorage.js",
-    "./index.html",
-    "./index.js",
-    "./index.css",
-    "./cardTypes.html",
-    "./cardTypes.js",
-    "./install.html",
-    "./install.js",
-    "./openFile.html",
-    "./openFile.js"
+  //card editor
+  "./card-editor/index.html",
+  "./card-editor/cardEditor.js",
+  //card type editor
+  "./type-manager/index.html",
+  "./type-manager/cardTypes.js",
+  //splash page
+  "./file/index.html",
+  //install page
+  "./install/index.html",
+  //asorted scripts and style
+  "./fileInterface.js",
+  "./IDBWebStorage.js",
+  "./style.css"
 ];
 
 self.addEventListener("activate", (event) => {
