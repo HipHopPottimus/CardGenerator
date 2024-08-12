@@ -1,6 +1,6 @@
 {
     "name": "Card generator",
-    "start_url": "./card-editor/",
+    "start_url": "./CardGenerator/src/card-editor/",
     "display": "standalone",
     "icons": [
       {
