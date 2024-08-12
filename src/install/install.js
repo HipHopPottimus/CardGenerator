@@ -1,4 +1,4 @@
-var installEvent;
+var installEvent = {prompt: () => alert("An error occured")};
 
 window.addEventListener("beforeinstallprompt",(e) => {
     e.preventDefault();
