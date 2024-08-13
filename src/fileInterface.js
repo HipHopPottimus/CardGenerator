@@ -3,7 +3,7 @@ const fileInterface = {
     async getFileHandle(){
         let fileHandle = await storage.getItem("dataFileHandle");
         if(!fileHandle){
-            window.location.assign("../file/");
+            window.location.assign("../file/index.html");
 
         }
         else if(await fileHandle.queryPermission({mode: "readwrite"}) != "granted"){
@@ -50,7 +50,7 @@ const fileInterface = {
         }
         );
         await storage.setItem("dataFileHandle",fileHandle);
-        window.location.assign("../card-editor");
+        window.location.assign("../card-editor/index.html");
     },
     
     async createNewFile(){
@@ -69,7 +69,7 @@ const fileInterface = {
             cards: [],
             types: {}
         });
-        window.location.assign("../card-editor");
+        window.location.assign("../card-editor/index.html");
     }
 }
 
@@ -97,3 +97,22 @@ const util = {
         await fileInterface.write(data);
     }
 }
+
+const comms = new BroadcastChannel("SWComms");
+comms.addEventListener("message",(e) => {
+    let {data} = e;
+    if(data.type == "update"){
+        let popup  = document.createElement("dialog");
+        popup.innerHTML = `
+        <h1>An update has been installed</h1>
+        <p>Version: ${data.version}</p>
+        <p>Change notes:</p>
+        <p>${data.notes}</p>
+        <b><p>This app requires to be restarted for updates to take effect</p></b>
+        <button onclick="window.location.assign('../install/index.html?return=true')">Restart</button>
+        `;
+        popup.onfocusout = () => popup.click();
+        document.body.appendChild(popup);
+        popup.show()
+    }
+});

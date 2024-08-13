@@ -1,12 +1,17 @@
 {
-    "name": "Card generator",
-    "start_url": "./card-editor/",
-    "display": "standalone",
-    "icons": [
-      {
-        "src": "icon.png",
-        "type": "image/png",
-        "sizes": "756x756"
-      }
-    ]
-  }
+  "name": "Card generator",
+  "id": "CardGenerator",
+  "start_url": "./card-editor/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay"],
+  "icons": [
+    {
+      "src": "icon.png",
+      "type": "image/png",
+      "sizes": "756x756"
+    }
+  ],
+  "theme_color": "white",
+  "background_color": "white"
+}

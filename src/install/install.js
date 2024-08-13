@@ -10,5 +10,11 @@ async function install(){
     navigator.serviceWorker.register("../sw.js");
     await navigator.serviceWorker.ready;
     let {outcome} = await installEvent.prompt();
-    if(outcome == "accepted") window.location.assign("../card-editor");
+    if(outcome == "accepted") window.location.assign("../card-editor/index.html");
 }
+
+window.addEventListener("DOMContentLoaded",() => {
+    if(window.location.href.includes("?return=true")){
+        setTimeout(() => history.back(),1000);
+    }
+});

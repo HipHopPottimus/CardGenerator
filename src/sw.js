@@ -1,6 +1,6 @@
-const VERSION = "1.0.0";
+const VERSION = "1.0.4.19";
 
-const CHANGE_NOTES = "The first release of CardGenerator.";
+const CHANGE_NOTES = "Fixed a problem with redirects and app starting url while working offline and changed the app to a light theme";
 
 const CACHE_NAME = "CardGeneratorCacheV:"+VERSION;
 
@@ -61,8 +61,8 @@ self.addEventListener("fetch", (e) => {
                 try{
                     return await fetch(e.request);
                 }
-                catch{
-                    return new Response("There was an error fetching "+e.request.url);
+                catch(error){
+                    return new Response("There was an error fetching "+e.request.url+"<br>"+error);
                 }
             }
         })(),
