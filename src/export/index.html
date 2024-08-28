@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Export cards</title>
+        <link rel="stylesheet" href="../style.css">
+        <script src="../IDBWebStorage.js"></script>
+        <script src="../fileInterface.js"></script>
+        <script src="export.js"></script>
+    </head>
+    <body class="noMargin">
+        <dialog open>
+            <h1>Export cards</h1>
+            <div id="settings">
+
+            </div>
+            <button onclick="this.parentElement.close();compileExport()">Export</button>
+        </dialog>
+        <div id="printOutput">
+
+        </div>
+    </body>
+</html>

@@ -17,6 +17,10 @@ window.addEventListener("keydown",(e) => {
         e.preventDefault();
         fileInterface.createNewFile();
     }
+    if(e.key == "p" && e.ctrlKey){
+        e.preventDefault();
+        window.location.assign("../export/index.html");
+    }
 })
 
 window.addEventListener("beforeunload",(e) => {
@@ -155,6 +159,64 @@ function deleteCard(index){
     tempData.cards = tempData.cards.slice(0,index).concat(tempData.cards.slice(index + 1));
     reloadTables();
 }
+
+var customSet = {
+    showUI(){
+        let popup = document.createElement("dialog");
+        popup.id = "customSetPopup";
+        popup.innerHTML = `
+            <p>Custom set creator</p>
+            <button onclick="customSet.uploadFronts()">Upload card fronts</button><br>
+            <button onclick="customSet.uploadBacks()">Upload card backs</button><br>
+            <label>Set name: <input id="customSetName"></label><br>
+            <button onclick="customSet.create()">Create</button>
+        `;
+        document.body.appendChild(popup);
+        popup.show();
+    },
+    cardFronts: [],
+    cardBacks: [],
+    async uploadFronts(){
+        this.cardFronts = await this.getCards();
+    },
+    async uploadBacks(){
+        this.cardBacks = await this.getCards();
+
+    },
+    async getCards(){
+        let handles = await window.showOpenFilePicker(
+            {
+                types: [{
+                    description: "SVG files",
+                    accept: {"image/xml+svg":[".svg"]}
+                }],
+                excludeAcceptAllOption: true,
+                multiple: true
+            }
+        );
+        let files = await Promise.all(handles.map(handle => handle.getFile()));
+        let content =  await Promise.all(files.map(file => file.text()));
+        return content;
+    },
+    create(){
+        modify();
+        let setName = document.getElementById("customSetName").value;
+        tempData.types[setName] = {
+            backGraphic: "",
+            frontGraphic: "",
+            properties: [],
+        }
+        for(let i = 0;  i < this.cardFronts.length; i++){
+            tempData.cards.push({
+                type: setName,
+                frontGraphic: this.cardFronts[i],
+                backGraphic: this.cardBacks[i] || this.cardBacks[0] || ""
+            })
+        }
+        document.getElementById("customSetPopup").remove();
+    }
+}
+
 
 function previewCard(index){
     let popup = document.createElement("dialog");

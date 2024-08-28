@@ -29,3 +29,28 @@ button{
 .spaced{
     margin: 5px;
 }
+.noMargin{
+    margin: 0px;
+}
+.page{
+    /*height: 20.9cm;
+    width: 29.6cm;*/
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+/*#printOutput{
+    margin: 0px;
+    padding: 0px;
+    width: 29.7cm;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}*/
+input[type*="number"]{
+    width: 50px;
+}

@@ -1,4 +1,4 @@
-const VERSION = "1.0.4.19";
+const VERSION = "1.0.1";
 
 const CHANGE_NOTES = "Fixed a problem with redirects and app starting url while working offline and changed the app to a light theme";
 

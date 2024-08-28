@@ -58,7 +58,7 @@ const fileInterface = {
         {
             types: [{
                 description: "CardGenerator JSON file",
-                accept: {"application/json":[".jsoon"]}
+                accept: {"application/json":[".json"]}
             }],
             excludeAcceptAllOption: true,
             suggestedName: "new_project"
@@ -95,6 +95,10 @@ const util = {
         let data = await fileInterface.read();
         delete data.types[name];
         await fileInterface.write(data);
+    },
+
+    getObjectURL(content,type = "image/svg+xml"){
+        return URL.createObjectURL(new Blob([content],{type}));
     }
 }
 

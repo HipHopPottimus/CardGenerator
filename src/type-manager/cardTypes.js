@@ -10,7 +10,7 @@ window.addEventListener("keydown",(e) => {
         e.preventDefault();
         save();
     }
-})
+});
 
 window.addEventListener("beforeunload",(e) => {
     if(!saved){
@@ -64,14 +64,18 @@ function generateEditingUI(){
     
     let type = tempData.types[typeName];
     let content = "";
-    content += `<label>Type name: <input value="${typeName}" onchange="changeTypeName('${typeName}',this.value)"></label>`;
-    content += `<div>${type.frontGraphic}</div>`;
-    content += `<button onclick="uploadSVG('${typeName}')">Upload new SVG</button>`;
-    content += `<table id="cardType${typeName}"><tbody>`;
-    content += `<tr><th>Property name</th><th>Replace value</th><th class="noBorder"></th></tr>`;
+    content += `
+        <label>Type name: <input value="${typeName}" onchange="changeTypeName('${typeName}',this.value)"></label>
+        <div><a href="${util.getObjectURL(type.frontGraphic)}" target="_blank">Front grahpic</a><br>
+        <button onclick="uploadSVG('${typeName}',true)">Upload new SVG</button>
+        <div><a href="${util.getObjectURL(type.backGraphic)}" target="_blank">Back grahpic</a><br>
+        <button onclick="uploadSVG('${typeName}',false)">Upload new SVG</button>
+        <table id="cardType${typeName}"><tbody>
+        <tr><th>Property name</th><th>Replace value</th><th class="noBorder"></th></tr>
+    `;
     for(let i = 0;i < type.properties.length;i++){
         let property = type.properties[i];
-        content +=`
+        content += `
         <tr><td><span class="editableTableValue" data-typePropertyIndex="${i}" data-representing="name">${property.name}</span></td>
         <td><span class="editableTableValue" data-typePropertyIndex="${i}" data-representing="replace">${property.replace}</span></td>
         <td class="noBorder"><button onclick="deleteProperty('${typeName}',${i})">Delete</button></td></tr>
@@ -145,12 +149,21 @@ function deleteProperty(typeName,index){
 
 function deleteType(typeName){
     modify();
-    delete tempData.types[typeName];
+    if(tempData.types[typeName]) delete tempData.types[typeName];
+    let toRemove = [];
+    for(let i = 0;i < tempData.cards.length;i++){
+        if(tempData.cards[i].type == typeName){
+            toRemove.push(i);
+        }
+    }
+    for(let i of toRemove.sort().reverse()){
+        tempData.cards.splice(i,1);
+    }
     reloadCardTypeSelect();
     generateEditingUI();
 }
 
-async function uploadSVG(cardType,front = true){
+async function uploadSVG(cardType,front){
     modify();
     let [handle] = await window.showOpenFilePicker(
     {
